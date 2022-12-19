@@ -24,3 +24,38 @@ First, install the package over pip and then set a hook:
 pip install pre-commit
 pre-commit install
 ```
+
+## 1. Usage
+
+First, clone the repo and change to the project directory.
+
+```shell
+git clone https://github.com/BERD-NFDI/BERD-projects.git
+cd BERD-projects
+```
+
+The relevant use-cases and source codes are located in `berd`.
+Currently, we support **python >= 3.10**.
+It is recommended to install the required dependencies in a separate environment, e.g.
+via `conda`.
+A simpler alternative is a virtual environment, which is created and activated with:
+
+```shell
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Dependencies are then installed via `pip`.
+
+```shell
+pip install -r requirements.txt
+```
+
+The `berd` project is structured like a python package, which has the advantage of
+being able to **install** it and thus reuse modules or functions without worrying about
+absolute filepaths.
+An editable version of `berd` is also installed over `pip`:
+
+```shell
+pip install -e .
+```

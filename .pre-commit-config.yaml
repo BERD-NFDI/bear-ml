@@ -30,7 +30,7 @@ repos:
           - --multi-line=3
           - --ensure-newline-before-comments
           - --fgw=3
-          - --tcg
+          - --tc
           - --up
 
 -   repo: https://github.com/psf/black
