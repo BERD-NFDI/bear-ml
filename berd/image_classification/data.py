@@ -1,13 +1,26 @@
 """Datamodule for CIFAR10."""
 import os
-from typing import Optional, List, Any, Tuple
+from typing import (
+    Any,
+    List,
+    Optional,
+    Tuple,
+)
 
 import pytorch_lightning as pl
 import torch
 from torch import Tensor
-from torch.utils.data import DataLoader, random_split, Dataset
+from torch.utils.data import (
+    DataLoader,
+    Dataset,
+    random_split,
+)
 from torchvision.datasets import CIFAR10
-from torchvision.transforms import Compose, ToTensor, Normalize
+from torchvision.transforms import (
+    Compose,
+    Normalize,
+    ToTensor,
+)
 
 
 class CIFAR10DataModule(pl.LightningDataModule):
@@ -67,9 +80,9 @@ class CIFAR10DataModule(pl.LightningDataModule):
         # Dummy declaration for datasets, which will be instantiated in setup()
         # Attribute definitions outside the constructor are bad style, but
         # we can't and shouldn't change lightnings base framework.
-        self.train_dataset = None
-        self.val_dataset = None
-        self.test_dataset = None
+        self.train_dataset: Optional[CIFAR10Wrapper] = None
+        self.val_dataset: Optional[CIFAR10Wrapper] = None
+        self.test_dataset: Optional[CIFAR10] = None
 
     def prepare_data(self) -> None:
         """
@@ -85,7 +98,7 @@ class CIFAR10DataModule(pl.LightningDataModule):
 
     def setup(self, stage: str) -> None:
         """
-        Setup data loading.
+        Initialize datasets.
 
         This function is called by every process in a multi GPU setting and is
         dependent on the `stage` in which the lightning trainer is currently in.
@@ -160,6 +173,7 @@ class CIFAR10Wrapper(Dataset):
         self.transform = transform
 
     def __len__(self) -> int:
+        """Get length of dataset."""
         return len(self.cifar)
 
     def __getitem__(self, idx: int) -> Tuple[Tensor, Tensor]:

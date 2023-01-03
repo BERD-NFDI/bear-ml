@@ -1,12 +1,14 @@
-import os
+"""Script for training a classifier on CIFAR10 with Pytorch Lightning."""
+
 import argparse
+import os
 from datetime import datetime
 
-import torch
-from torchvision.transforms import AutoAugment, AutoAugmentPolicy
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, TQDMProgressBar
+import torch
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger
+from torchvision.transforms import AutoAugment, AutoAugmentPolicy
 
 from berd.image_classification.data import CIFAR10DataModule
 from berd.image_classification.module import ClassifierModule
@@ -41,6 +43,7 @@ def get_args():
 
 
 def main() -> None:
+    """Run training."""
     args = get_args()
 
     # Initialize model module
@@ -104,7 +107,7 @@ def main() -> None:
         logger=logger,
         callbacks=[checkpoint_callback, early_stopping_callback],
         max_epochs=args.epochs,
-        accelerator=accelerator
+        accelerator=accelerator,
     )
 
     # Finally, kick of the training process.

@@ -1,8 +1,10 @@
-from typing import Tuple, Dict
+"""Module class for a Pytorch Lightning classifier."""
+
+from typing import Dict, Tuple
 
 import pytorch_lightning as pl
 import torch
-from torch import nn, Tensor
+from torch import Tensor, nn
 from torch.optim import SGD
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torchmetrics import MetricCollection
@@ -15,6 +17,7 @@ from torchmetrics.classification import (
 
 class ClassifierModule(pl.LightningModule):
     """Model module for classification."""
+
     def __init__(
         self,
         model_id: str = 'resnet34',
@@ -25,6 +28,7 @@ class ClassifierModule(pl.LightningModule):
     ) -> None:
         """
         Initialize a ClassifierModule.
+
         :param model_id: Torchvision model id.
         :param num_classes: Number of classes in dataset.
         :param learning_rate: Learning rate.
