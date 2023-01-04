@@ -22,7 +22,7 @@ repos:
           - --ignore-missing-imports
 
 -   repo: https://github.com/PyCQA/isort
-    rev: 5.11.2
+    rev: 5.11.4
     hooks:
     -   id: isort
         args:
@@ -50,7 +50,7 @@ repos:
           - --extend-ignore=E203
 
 -   repo: https://github.com/PyCQA/pydocstyle
-    rev: 6.1.1
+    rev: 6.2.2
     hooks:
     -   id: pydocstyle
         args:
