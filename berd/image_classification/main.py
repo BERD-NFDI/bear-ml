@@ -11,11 +11,9 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision.transforms import AutoAugment, AutoAugmentPolicy
 
 from berd.image_classification.data import CIFAR10DataModule
-from berd.image_classification.module import ClassifierModule
+from berd.image_classification.model import ClassifierModule
 
-# PyTorch Lightning allows to set all necessary seeds in one function call.
 RANDOM_SEED = 42
-pl.seed_everything(RANDOM_SEED)
 
 
 def get_args():
@@ -45,6 +43,9 @@ def get_args():
 def main() -> None:
     """Run training."""
     args = get_args()
+
+    # PyTorch Lightning allows to set all necessary seeds in one function call.
+    pl.seed_everything(RANDOM_SEED)
 
     # Initialize model module
     # ----------------------------------------------------------------------------------
