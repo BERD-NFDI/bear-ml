@@ -25,6 +25,18 @@ pip install pre-commit
 pre-commit install
 ```
 
+To ensure code serialization and keeping the memory profile low, `.ipynb` are blacklisted
+in this repository.
+A notebook can be saved to the repo by converting it to a serializable format via
+`jupytext`, preferably `py:percent`:
+
+```shell
+jupytext --to py:percent <notebook-to-convert>.ipynb
+```
+
+The result is a python file, which can be committed and later on be converted back to `.ipynb`.
+A notebook-python file from jupytext shall carry the suffix `_nb.py`.
+
 ## 1. Usage
 
 First, clone the repo and change to the project directory.
@@ -59,3 +71,15 @@ An editable version of `berd` is also installed over `pip`:
 ```shell
 pip install -e .
 ```
+
+The project contains some jupyter notebooks, which were converted to python files
+due to better handling in the repository.
+These files end with `_nb.py` and can be converted back to a `.ipynb` file with
+`jupytext`:
+
+```shell
+jupytext --to ipynb --execute <your_file>_nb.py
+```
+
+The `--execute` flag triggers executing every cell during conversion.
+Alternatively, you can run the `_nb.py` files like every other python script.
