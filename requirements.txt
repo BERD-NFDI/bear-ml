@@ -1,3 +1,4 @@
 -e .
+pytorch_lightning
 torch
 torchvision
