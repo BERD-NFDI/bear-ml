@@ -1,4 +1,7 @@
 -e .
+jupyter
+jupytext
+matplotlib
 pytorch_lightning
 torch
 torchvision
