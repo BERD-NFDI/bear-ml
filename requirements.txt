@@ -1,4 +1,6 @@
 -e .
+pandas
 pytorch_lightning
 torch
 torchvision
+transformers

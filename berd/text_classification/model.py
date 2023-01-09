@@ -1,118 +1,157 @@
 """Module class for a Pytorch Lightning classifier."""
+from typing import (
+    Any,
+    Dict,
+    List,
+)
 
 import pytorch_lightning as pl
-import torch
-import torch.nn as nn
-from torchmetrics.functional import accuracy, auroc
-from transformers import (
-    AdamW,
-    BertModel,
-    get_linear_schedule_with_warmup,
+from torch import Tensor, nn
+from torch.optim import AdamW
+from torchmetrics import MetricCollection
+from torchmetrics.classification import (
+    MultilabelAccuracy,
+    MultilabelAUROC,
+    MultilabelPrecision,
+    MultilabelRecall,
 )
+from transformers import BertModel, get_linear_schedule_with_warmup
 
 
 class ToxicCommentTagger(pl.LightningModule):
     """Model module for classification."""
 
     def __init__(
-        self, n_classes: int, n_training_steps=None, n_warmup_steps=None, label_col=None
+        self,
+        n_classes: int,
+        n_training_steps: int,
+        n_warmup_steps: int,
+        label_columns: List,
+        bert_model_name: str = 'bert-base-cased',
     ) -> None:
         """
         Initialize a ClassifierModule.
 
-        :param label_col: Labels .
+        :param label_columns: Labels .
         :param n_classes: Number of classes in dataset.
-        :param n_training_steps: Number of steps training steps for scheduler .
+        :param n_training_steps: Number of steps training steps for scheduler.
         :param n_warmup_steps: Number of warm up steps for scheduler.
         """
         super().__init__()
-        self.LABEL_COLUMNS = label_col
+        self.label_columns = label_columns
+        self.n_classes = n_classes
         # To create our model, we use the Bert pretrained model from huggingface.
-        self.bert = BertModel.from_pretrained('bert-base-cased', return_dict=True)
+        # The bert model provides embeddings for the text.
+        self.bert = BertModel.from_pretrained(bert_model_name, return_dict=True)
+        # The classifier is a simple linear model.
         self.classifier = nn.Linear(self.bert.config.hidden_size, n_classes)
+
         # These parameters are needed for the optimizer, which is instantiated
         # in the `configure_optimizers` method.
         self.n_training_steps = n_training_steps
         self.n_warmup_steps = n_warmup_steps
 
-        self.criterion = nn.BCELoss()
+        self.loss_func = nn.BCEWithLogitsLoss()
+
         self.bert.eval()
         for param in self.bert.parameters():
             param.requires_grad = False
 
-    def forward(self, input_ids, attention_mask, labels=None):
-        """Forward pass of the model."""
-        output = self.bert(input_ids, attention_mask=attention_mask)
-        output = self.classifier(output.pooler_output)
-        output = torch.sigmoid(output)
-        loss = 0
-        if labels is not None:
-            loss = self.criterion(output, labels)
-        return loss, output
+        # Metrics are tracked using the torchmetrics package.
+        # This gives a variety of convenience including sync over devices.
+        # With the collection, multiple metrics can be bundled and then cloned for the
+        # respective stage.
+        metrics = MetricCollection(
+            [
+                MultilabelAccuracy(n_classes),
+                MultilabelPrecision(n_classes),
+                MultilabelRecall(n_classes),
+            ]
+        )
+        self.train_metrics = metrics.clone(prefix='train/')
+        self.val_metrics = metrics.clone(prefix='val/')
+        self.test_metrics = metrics.clone(prefix='test/')
 
-    def training_step(self, batch, batch_idx):
+        self.train_auroc = MultilabelAUROC(n_classes, average='none')
+        self.val_auroc = MultilabelAUROC(n_classes, average='none')
+        self.test_auroc = MultilabelAUROC(n_classes, average='none')
+
+    def forward(self, input_ids: Tensor, attention_mask: Tensor) -> Tensor:
+        """Forward pass of the model."""
+        embeddings = self.bert(input_ids, attention_mask=attention_mask)
+        return self.classifier(embeddings.pooler_output)
+
+    def training_step(self, batch: Dict, batch_idx: int) -> Tensor:
         """Do a training step."""
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         labels = batch['labels']
-        loss, outputs = self(input_ids, attention_mask, labels)
-        self.log('train_loss', loss, prog_bar=True, logger=True)
-        return {'loss': loss, 'predictions': outputs, 'labels': labels}
 
-    def training_epoch_end(self, outputs):
-        """Do a training epoch."""
-        labels = []
-        predictions = []
-        for output in outputs:
-            for out_labels in output['labels'].detach().cpu():
-                labels.append(out_labels)
-            for out_predictions in output['predictions'].detach().cpu():
-                predictions.append(out_predictions)
+        predictions = self(input_ids, attention_mask)
+        loss = self.loss_func(predictions, labels)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+        self.train_metrics(predictions, labels)
+        self.train_auroc.update(predictions, labels)
+        self.log_dict(self.train_metrics, on_step=False, on_epoch=True)
+        self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+        return loss
 
-        for i, name in enumerate(self.LABEL_COLUMNS):
-            class_roc_auc = auroc(predictions[:, i], labels[:, i])
-            self.logger.experiment.add_scalar(
-                f'{name}_roc_auc/Train', class_roc_auc, self.current_epoch
-            )
+    def training_epoch_end(self, outputs: Any) -> None:
+        """Do actions after training epoch."""
+        aurocs = self.train_auroc.compute()
+        self.train_auroc.reset()
 
-    def validation_step(self, batch, batch_idx):
+        self.log_dict(
+            {'train/auroc_' + k: v for k, v in zip(self.label_columns, aurocs)}
+        )
+
+    def validation_step(self, batch: Dict, batch_idx: int) -> Tensor:
         """Do a validation step."""
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         labels = batch['labels']
-        loss, outputs = self(input_ids, attention_mask, labels)
-        self.log('val_loss', loss, prog_bar=True, logger=True)
+
+        predictions = self(input_ids, attention_mask)
+        loss = self.loss_func(predictions, labels)
+
+        self.val_metrics(predictions, labels)
+        self.val_auroc.update(predictions, labels)
+        self.log_dict(self.val_metrics, on_step=False, on_epoch=True)
+        self.log('val/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
         return loss
 
-    def test_step(self, batch, batch_idx):
+    def validation_epoch_end(self, outputs: Any) -> None:
+        """Do actions after validation epoch."""
+        aurocs = self.val_auroc.compute()
+        self.val_auroc.reset()
+
+        self.log_dict({'val/auroc_' + k: v for k, v in zip(self.label_columns, aurocs)})
+
+    def test_step(self, batch: Dict, batch_idx: int) -> Tensor:
         """Do a testing step."""
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         labels = batch['labels']
-        loss, outputs = self(input_ids, attention_mask, labels)
-        self.log('test_loss', loss, prog_bar=True, logger=True)
-        return {'loss': loss, 'predictions': outputs, 'labels': labels}
 
-    def testing_epoch_end(self, outputs):
-        """Do a testing epoch."""
-        labels = []
-        predictions = []
-        for output in outputs:
-            for out_labels in output['labels'].detach().cpu():
-                labels.append(out_labels)
-            for out_predictions in output['predictions'].detach().cpu():
-                predictions.append(out_predictions)
+        predictions = self(input_ids, attention_mask)
+        loss = self.loss_func(predictions, labels)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+        self.test_metrics(predictions, labels)
+        self.test_auroc.update(predictions, labels)
+        self.log_dict(self.test_metrics, on_step=False, on_epoch=True)
+        self.log('test/loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+        return loss
 
-        acc = accuracy(predictions, labels, threshold=0.5)
-        self.log('Test_accuracy', acc, prog_bar=True, logger=True)
+    def testing_epoch_end(self, outputs: Any) -> None:
+        """Do actions after testing epoch."""
+        aurocs = self.test_auroc.compute()
+        self.test_auroc.reset()
 
-    def configure_optimizers(self):
+        self.log_dict(
+            {'test/auroc_' + k: v for k, v in zip(self.label_columns, aurocs)}
+        )
+
+    def configure_optimizers(self) -> Dict:
         """Initialize optimizer."""
         optimizer = AdamW(self.parameters(), lr=2e-5)
 
@@ -122,6 +161,10 @@ class ToxicCommentTagger(pl.LightningModule):
             num_training_steps=self.n_training_steps,
         )
 
-        return dict(
-            optimizer=optimizer, lr_scheduler=dict(scheduler=scheduler, interval='step')
-        )
+        return {
+            'optimizer': optimizer,
+            'lr_scheduler': {
+                'scheduler': scheduler,
+                'interval': 'step',
+            },
+        }

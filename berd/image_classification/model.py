@@ -70,9 +70,9 @@ class ClassifierModule(pl.LightningModule):
                 MulticlassRecall(num_classes),
             ]
         )
-        self.train_metrics = metrics.clone(prefix='train_')
-        self.val_metrics = metrics.clone(prefix='val_')
-        self.test_metrics = metrics.clone(prefix='test_')
+        self.train_metrics = metrics.clone(prefix='train/')
+        self.val_metrics = metrics.clone(prefix='val/')
+        self.test_metrics = metrics.clone(prefix='test/')
 
     def forward(self, x: Tensor) -> Tensor:
         """Forward pass of the model."""
