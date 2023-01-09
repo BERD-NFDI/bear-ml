@@ -1,4 +1,5 @@
 """Module class for a Pytorch Lightning classifier."""
+
 from typing import (
     Any,
     Dict,
@@ -16,6 +17,9 @@ from torchmetrics.classification import (
     MultilabelRecall,
 )
 from transformers import BertModel, get_linear_schedule_with_warmup
+
+"""This code is adapted based on
+https://curiousily.com/posts/multi-label-text-classification-with-bert-and-pytorch-lightning/"""
 
 
 class ToxicCommentTagger(pl.LightningModule):
@@ -52,7 +56,9 @@ class ToxicCommentTagger(pl.LightningModule):
         self.n_warmup_steps = n_warmup_steps
 
         self.loss_func = nn.BCEWithLogitsLoss()
-
+        # To get best results you should fine-tune the bert model as well. but if you have limited computation power
+        # you need to freeze the layers inside the Bert model. mode.eval() disable layer such as dropout and batch
+        # normalization. By putting param.requires_grad to false, we deactivate the back-prop and improve memory usage
         self.bert.eval()
         for param in self.bert.parameters():
             param.requires_grad = False
@@ -153,8 +159,9 @@ class ToxicCommentTagger(pl.LightningModule):
 
     def configure_optimizers(self) -> Dict:
         """Initialize optimizer."""
+        # AdamW is Adam with weight regularization to improve the generalization power
         optimizer = AdamW(self.parameters(), lr=2e-5)
-
+        # Decrease learning rate linearly to 0 after warmup steps
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
             num_warmup_steps=self.n_warmup_steps,

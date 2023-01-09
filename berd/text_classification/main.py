@@ -17,6 +17,8 @@ from berd.text_classification.data import ToxicCommentDataModule
 from berd.text_classification.model import ToxicCommentTagger
 
 RANDOM_SEED = 42
+"""This code is adapted based on
+https://curiousily.com/posts/multi-label-text-classification-with-bert-and-pytorch-lightning/"""
 
 
 def parse_option():
