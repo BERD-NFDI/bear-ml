@@ -48,6 +48,7 @@ class ToxicCommentDataModule(pl.LightningDataModule):
         # we can't and shouldn't change lightnings base framework.
         self.train_dataset: Optional[ToxicCommentsDataset] = None
         self.test_dataset: Optional[ToxicCommentsDataset] = None
+        self.val_dataset: Optional[ToxicCommentsDataset] = None
 
     def prepare_data(self) -> None:
         """
@@ -75,17 +76,24 @@ class ToxicCommentDataModule(pl.LightningDataModule):
         """
         # Load data from save .csv file into pandas dataframe
         df = pd.read_csv(os.path.join(self.data_dir, self.file_name))
-        # Perform a simple train test splot of 95/5 for showcasing.
+        # Perform a simple train test split of 95/5 for showcasing.
         train_df, test_df = train_test_split(df, test_size=0.05)
         # Divide data in toxic and clean comments
         label_columns = df.columns.tolist()[2:]
         train_toxic = train_df[train_df[label_columns].sum(axis=1) > 0]
         train_clean = train_df[train_df[label_columns].sum(axis=1) == 0]
+        # Divide data into train and validation set with split of 90/10
+        train_toxic, val_toxic = train_test_split(df, test_size=0.1)
         # Sample from clean data to balance the dataset
-        train_df = pd.concat([train_toxic, train_clean.sample(15_000)])
+        train_df = pd.concat([train_toxic, train_clean.sample(13_500)])
+        val_df = pd.concat([val_toxic, train_clean.sample(15_00)])
 
         self.train_dataset = ToxicCommentsDataset(
             train_df, self.tokenizer, self.max_token_len
+        )
+
+        self.val_dataset = ToxicCommentsDataset(
+            val_df, self.tokenizer, self.max_token_len
         )
 
         self.test_dataset = ToxicCommentsDataset(
@@ -104,7 +112,7 @@ class ToxicCommentDataModule(pl.LightningDataModule):
     def val_dataloader(self) -> DataLoader:
         """Get validation dataloader."""
         return DataLoader(
-            dataset=self.test_dataset,
+            dataset=self.val_dataset,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
         )
@@ -141,6 +149,7 @@ class ToxicCommentsDataset(Dataset):
         data_row = self.data.iloc[index]
         c_text = data_row.comment_text
         labels = data_row[self.label_columns]
+
         enc = self.tokenizer.encode_plus(
             c_text,
             max_length=self.max_token_len,
