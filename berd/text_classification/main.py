@@ -124,7 +124,7 @@ def main() -> None:
             TQDMProgressBar(refresh_rate=30),
         ],
         max_epochs=args.epochs,
-        accelerator='cpu',
+        accelerator='cuda',
     )
     # Finally, kick of the training process.
     trainer.fit(model, data_module)
