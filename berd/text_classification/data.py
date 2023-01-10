@@ -1,4 +1,9 @@
-"""Datamodule for ToxicComment dataset."""
+"""
+Datamodule for ToxicComment dataset.
+
+This code is adapted based on
+https://curiousily.com/posts/multi-label-text-classification-with-bert-and-pytorch-lightning/
+"""  # noqa
 
 import os
 from typing import Dict, Optional
@@ -10,9 +15,6 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Dataset
 from torchvision.datasets.utils import download_file_from_google_drive
 from transformers import PreTrainedTokenizerBase
-
-"""This code is adapted based on
-https://curiousily.com/posts/multi-label-text-classification-with-bert-and-pytorch-lightning/"""
 
 
 class ToxicCommentDataModule(pl.LightningDataModule):
@@ -154,10 +156,12 @@ class ToxicCommentsDataset(Dataset):
         c_text = data_row.comment_text
         labels = data_row[self.label_columns]
 
-        # Tokenizer convert the strings to sub-word strings.
+        # Tokenizer converts the strings to sub-word strings.
         # Here we used Pretrained Fasttokenizer from Huggingface.
-        # You cn find more information https://huggingface.co/docs/transformers/main_classes/tokenizer.
-        # This function helps us with tokenization adn encoder outputs and also how to deal with special characters
+        # You can find more information here:
+        # https://huggingface.co/docs/transformers/main_classes/tokenizer.
+        # This function helps us with tokenization and encoder outputs and
+        # also how to deal with special characters.
         enc = self.tokenizer.encode_plus(
             c_text,
             max_length=self.max_token_len,

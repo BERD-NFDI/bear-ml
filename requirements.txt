@@ -1,6 +1,7 @@
 -e .
 pandas
 pytorch_lightning
+scikit-learn
 torch
 torchvision
 transformers
