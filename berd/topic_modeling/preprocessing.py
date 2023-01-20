@@ -76,14 +76,14 @@ class preprocess:
         """Remove website links from dataframe."""
         logging.info('Remove website links from dataframe')
         pre_text = re.sub(
-            r'https?:\/\/(www\.)?[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',
+            r'https?:\/\/(www\.)?[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',  # noqa
             ' ',
             text,
             flags=re.MULTILINE,
         )
 
         pre_text = re.sub(
-            r'[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',
+            r'[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',  # noqa
             ' ',
             pre_text,
             flags=re.MULTILINE,
