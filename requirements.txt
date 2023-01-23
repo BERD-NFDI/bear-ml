@@ -1,7 +1,10 @@
 -e .
+pandas
 jupyter
 jupytext
 matplotlib
 pytorch_lightning
+scikit-learn
 torch
 torchvision
+transformers

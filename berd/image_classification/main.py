@@ -18,7 +18,7 @@ RANDOM_SEED = 42
 
 def get_args():
     """Get command line arguments."""
-    parser = argparse.ArgumentParser('argument for training')
+    parser = argparse.ArgumentParser()
     parser.add_argument('--batch_size', type=int, default=128, help='batch_size')
     parser.add_argument(
         '--epochs', type=int, default=20, help='number of training epochs'
@@ -83,12 +83,12 @@ def main() -> None:
         filename='checkpoint',
         save_top_k=1,
         verbose=True,
-        monitor='val_MulticlassAccuracy',
+        monitor='val/MulticlassAccuracy',
         mode='max',
     )
     # Early stopping interrupts training, if there was no improvement in validation
     # loss for a certain training period.
-    early_stopping_callback = EarlyStopping(monitor='val_loss', patience=5)
+    early_stopping_callback = EarlyStopping(monitor='val/loss', patience=5)
 
     # The tensorboard logger allows for monitoring the progress of training
     logger = TensorBoardLogger(save_dir=log_path)
