@@ -91,8 +91,11 @@ class ToxicCommentDataModule(pl.LightningDataModule):
         # Divide data into train and validation set with split of 90/10
         train_toxic, val_toxic = train_test_split(train_toxic, test_size=0.1)
         # Sample from clean data to balance the dataset
-        train_df = pd.concat([train_toxic, train_clean.sample(13_500)])
-        val_df = pd.concat([val_toxic, train_clean.sample(15_00)])
+        train_clean_size = 13_500
+        val_clean_size = 1_500
+        train_clean = train_clean.sample(frac=1)
+        train_df = pd.concat([train_toxic, train_clean[:train_clean_size]])
+        val_df = pd.concat([val_toxic, train_clean[train_clean_size:val_clean_size]])
 
         self.train_dataset = ToxicCommentsDataset(
             train_df, self.tokenizer, self.max_token_len

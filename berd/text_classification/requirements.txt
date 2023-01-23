@@ -1,9 +1,0 @@
-autocorrect==2.6.1
-numpy==1.23.1
-pandas==1.4.3
-pytorch_lightning==1.6.5
-scikit_learn==1.2.0
-torch==1.12.1+cu116
-torchmetrics==0.9.3
-torchvision==0.13.1+cu116
-transformers==4.21.1
