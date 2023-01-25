@@ -1,97 +1,89 @@
 """Module class for a custom text preprocessing class."""
 
-import logging
 import re
 import string
+from functools import reduce
+from typing import List
 
-# load()
 from autocorrect import Speller
 from gensim.parsing.preprocessing import remove_stopwords
-
-# from wordsegment import load, segment
-from transformers import DistilBertTokenizer
+from tqdm import tqdm
 
 
-class preprocess:
-    """preprocess module."""
+class StringPreprocessor:
+    """Preprocessing module."""
 
     def __init__(self):
-        """Initialize the tokenizer model."""
-        super(preprocess, self).__init__()
-        # you can use tokenization if it is necessary.
-        # There are different tokenizer available on hugginface.
-        # We used Disitilbert tokenizer.
-        # You can find more information about avialable pretrained tokenizer in
-        # https://huggingface.co/docs/transformers/tokenizer_summary #qos
-        self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
+        """Initialize the StringPreprocessor."""
+        super().__init__()
+        self.speller = Speller()
+        # Choose the preprocessing functions that should be applied
+        self.preprocess_funcs = (
+            StringPreprocessor.remove_website_links,
+            StringPreprocessor.remove_newline,
+            StringPreprocessor.remove_punctuation,
+            StringPreprocessor.correct_spelling,
+            StringPreprocessor.remove_digits,
+            StringPreprocessor.remove_stop_words,
+            StringPreprocessor.convert_to_lowercase,
+        )
 
-    def preprocessing(self, text):
-        """Choose which preprocess function you want to be applied."""
-        logging.info('In preprocess function.')
-        pre_text = self.remove_website_links(text)
-        pre_text = self.remove_newline(pre_text)
-        pre_text = self.remove_punctuation(pre_text)
-        pre_text = self.remove_digits(pre_text)
-        pre_text = self.remove_stop_words(pre_text)
-        pre_text = self.lowercase(pre_text)
-        # pre_text = self.tokenize(pre_text)
-        return pre_text
+    def _exec_preprocess_funcs(self, s: str) -> str:
+        """Execute all preprocessing functions in a chain."""
+        return reduce(lambda arg, f: f(arg), self.preprocess_funcs, s)
 
-    def lowercase(self, text):
-        """Convert dataframe to lowercase."""
-        logging.info('Convert dataframe to lowercase')
-        pre_text = text.lower()
-        return pre_text
+    def preprocess(self, docs: List[str]) -> List[str]:
+        """Preprocess a list of strings."""
+        # This function works only on one core.
+        # For larger datasets a look into the `multiprocessing` library helps.
+        return [self._exec_preprocess_funcs(s) for s in tqdm(docs)]
 
-    def remove_newline(self, text):
-        """Remove newlines from dataframe."""
-        logging.info('Remove newlines from dataframe')
-        pre_text = re.sub('\n', ' ', text)
-        return pre_text
+    @staticmethod
+    def convert_to_lowercase(s: str) -> str:
+        """Convert string to lowercase."""
+        return s.lower()
 
-    def remove_punctuation(self, text):
+    @staticmethod
+    def remove_newline(s: str) -> str:
+        """Remove newlines from string."""
+        return re.sub('\n', ' ', s)
+
+    @staticmethod
+    def remove_punctuation(s: str) -> str:
         """Remove special characters."""
-        logging.info('Remove special characters')
-        pre_text = text.translate(str.maketrans('', '', string.punctuation))
-        # punctuations = '''!()-![]{};:+'"\,<>./?@#$%^&*_~'''
-        # pre_text = ' '.join([i for i in text if not i in punctuations])
-        # pre_text = ' '.join(segment(pre_text))
+        return s.translate(str.maketrans('', '', string.punctuation))
+
+    @staticmethod
+    def correct_spelling(s: str) -> str:
+        """Correct spelling mistakes with autocorrect."""
         spell = Speller()
-        pre_text = ' '.join([spell(w) for w in pre_text.split()])
-        return pre_text
+        return ' '.join([spell(w) for w in s.split(' ')])
 
-    def remove_digits(self, text):
-        """Remove numbers from dataframe."""
-        logging.info('Remove numbers from dataframe')
-        pre_text = re.sub(r'\d', '', text)
-        return pre_text
+    @staticmethod
+    def remove_digits(s: str) -> str:
+        """Remove numbers from string."""
+        return re.sub(r'\d', '', s)
 
-    def remove_stop_words(self, text):
-        """Remove stop words from dataframe."""
-        logging.info('Remove stop words from dataframe')
-        pre_text = remove_stopwords(text)
-        return pre_text
+    @staticmethod
+    def remove_stop_words(s: str) -> str:
+        """Remove stop words from string."""
+        return remove_stopwords(s)
 
-    def remove_website_links(self, text):
-        """Remove website links from dataframe."""
-        logging.info('Remove website links from dataframe')
-        pre_text = re.sub(
+    @staticmethod
+    def remove_website_links(s: str) -> str:
+        """Remove website links from string."""
+        s = re.sub(
             r'https?:\/\/(www\.)?[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',  # noqa
             ' ',
-            text,
+            s,
             flags=re.MULTILINE,
         )
 
-        pre_text = re.sub(
+        s = re.sub(
             r'[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)',  # noqa
             ' ',
-            pre_text,
+            s,
             flags=re.MULTILINE,
         )
 
-        return pre_text
-
-    def tokenize(self, text):
-        """Apply tokenization."""
-        logging.info('Apply tokenization')
-        return self.tokenizer(text, truncation=True)
+        return s
