@@ -8,6 +8,8 @@ matplotlib
 pandas
 pytorch_lightning==1.9.0
 scikit-learn
+segmentation-models-pytorch
+tensorboard
 torch==1.13.1
 torchvision==0.14.1
 transformers==4.26.0

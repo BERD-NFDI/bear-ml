@@ -1,0 +1,7 @@
+numpy==1.23.1
+pandas==1.4.3
+Pillow==9.4.0
+pytorch_lightning==1.6.5
+segmentation_models_pytorch==0.3.0
+torch==1.13.1+cu116
+torchvision==0.14.1+cu116
