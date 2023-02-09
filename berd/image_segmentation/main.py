@@ -1,4 +1,4 @@
-"""Script for training Image segmentation with Pytorch Lightning."""
+"""Script for training an image segmentation model with Pytorch Lightning."""
 
 import argparse
 import os
@@ -6,21 +6,18 @@ from datetime import datetime
 
 import pytorch_lightning as pl
 import torch
-import utils
 from pytorch_lightning.callbacks import (
     EarlyStopping,
     ModelCheckpoint,
     TQDMProgressBar,
 )
+from pytorch_lightning.loggers import TensorBoardLogger
 from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
 from torch.utils.data import DataLoader
 
-from berd.image_segmentation.segmentation import segModel
+from berd.image_segmentation.model import SegmentationModel
 
 RANDOM_SEED = 42
-
-# PyTorch Lightning allows to set all necessary seeds in one function call.
-pl.seed_everything(RANDOM_SEED)
 
 
 def parse_option():
@@ -28,9 +25,9 @@ def parse_option():
     parser = argparse.ArgumentParser('argument for training')
     parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
     parser.add_argument('--wd', type=float, default=1e-4, help='weight decay')
-    parser.add_argument('--batch_size', type=int, default=128, help='batch_size')
+    parser.add_argument('--batch_size', type=int, default=32, help='batch_size')
     parser.add_argument(
-        '--epochs', type=int, default=50, help='number of training epochs'
+        '--epochs', type=int, default=20, help='number of training epochs'
     )
     parser.add_argument(
         '--data_dir', type=str, default='data', help='path to custom dataset'
@@ -38,97 +35,115 @@ def parse_option():
     parser.add_argument(
         '--log_dir', type=str, default='logs', help='path to data directory'
     )
-
-    parser.add_argument('--n_workers', type=int, default=16, help='number of workers')
+    parser.add_argument('--n_workers', type=int, default=4, help='number of workers')
     parser.add_argument(
-        '--model_w_f',
-        default=False,
-        type=utils.bool_flag,
-        help='Whether to Freeze weight in the model (Default: False)',
+        '--freeze_encoder',
+        action='store_true',
+        help='Whether to freeze all encoder weights (Default: False)',
     )
     parser.add_argument(
-        '--head_w_f',
-        default=False,
-        type=utils.bool_flag,
-        help='Whether to Freeze weight in the segmentation head (Default: False)',
+        '--freeze_head',
+        action='store_true',
+        help='Whether to freeze weights in the segmentation head (Default: False)',
     )
     parser.add_argument(
-        '--decoder_w_f',
-        default=False,
-        type=utils.bool_flag,
+        '--freeze_decoder',
+        action='store_true',
         help='Whether to Freeze weight in the decoder (Default: False)',
     )
 
-    opt = parser.parse_args()
-
-    # set the path according to the environment
-    if opt.data_dir is None:
-        opt.data_dir = '~/data'
-    opt.save_folder = './saved_models/'
-    if not os.path.isdir(opt.save_folder):
-        os.makedirs(opt.save_folder)
-    return opt
+    args = parser.parse_args()
+    return args
 
 
 def main():
     """Run training."""
-    opt = parse_option()
-    # Import dataset
-    SimpleOxfordPetDataset.download(opt.data_dir)
-    train_dataset = SimpleOxfordPetDataset(opt.data_dir, 'train')
-    valid_dataset = SimpleOxfordPetDataset(opt.data_dir, 'valid')
-    test_dataset = SimpleOxfordPetDataset(opt.data_dir, 'test')
+    args = parse_option()
+
+    # PyTorch Lightning allows to set all necessary seeds in one function call.
+    pl.seed_everything(RANDOM_SEED)
+
+    # Initialize data
+    # ----------------------------------------------------------------------------------
+
+    # For this example we use the Oxford pet dataset, which has around 200 images for
+    # each of its 37 cats & dogs species.
+    # An API to the dataset is provided over the segmentation_models_pytorch package.
+    print('Downloading dataset ...')
+    dataset_path = os.path.join(args.data_dir, 'oxford_pet')
+    os.makedirs(dataset_path, exist_ok=True)
+
+    # Quick dirty hack to check whether data was already completely downloaded.
+    if len(os.listdir(os.path.join(dataset_path, 'images'))) != 7393:
+        SimpleOxfordPetDataset.download(args.data_dir)
+    else:
+        print('Dataset is already downloaded.')
+
+    train_dataset = SimpleOxfordPetDataset(root=dataset_path, mode='train')
+    valid_dataset = SimpleOxfordPetDataset(root=dataset_path, mode='valid')
+    test_dataset = SimpleOxfordPetDataset(root=dataset_path, mode='test')
 
     train_dataloader = DataLoader(
         train_dataset,
-        batch_size=opt.batch_size,
+        batch_size=args.batch_size,
         shuffle=True,
-        num_workers=opt.n_workers,
+        num_workers=args.n_workers,
     )
     valid_dataloader = DataLoader(
         valid_dataset,
-        batch_size=opt.batch_size,
+        batch_size=args.batch_size,
         shuffle=False,
-        num_workers=opt.n_workers,
+        num_workers=args.n_workers,
     )
     test_dataloader = DataLoader(
         test_dataset,
-        batch_size=opt.batch_size,
+        batch_size=args.batch_size,
         shuffle=False,
-        num_workers=opt.n_workers,
+        num_workers=args.n_workers,
     )
+
     # Initialize model module
-    model = segModel(
-        'FPN',
-        'resnet34',
-        in_channels=3,
+    # ----------------------------------------------------------------------------------
+
+    model = SegmentationModel(
+        arch='FPN',
+        encoder_name='resnet34',
         out_classes=1,
-        lr=opt.lr,
-        wd=opt.d,
-        model_w_f=opt.model_w_f,
-        head_w_f=opt.head_w_f,
-        decoder_w_f=opt.decoder_w_f,
+        lr=args.lr,
+        wd=args.wd,
+        freeze_encoder=args.freeze_encoder,
+        freeze_head=args.freeze_head,
+        freeze_decoder=args.freeze_decoder,
     )
-    # Define Callbacks
-    checkpoint_callback = ModelCheckpoint(
-        dirpath='./saved_models/',
-        filename='best-checkpoint',
-        verbose=True,
-        monitor='valid_loss',
-        mode='min',
-    )
+
     # Setup trainer
     # ----------------------------------------------------------------------------------
     run_id = datetime.now().strftime('image_segmentation_%Y_%m_%d_%H_%M')
-    log_path = os.path.join(opt.log_dir, run_id)
+    log_path = os.path.join(args.log_dir, run_id)
     os.makedirs(log_path, exist_ok=True)
+
+    if torch.cuda.is_available():
+        acc_dict = {'devices': 1, 'accelerator': 'gpu'}
+    else:
+        acc_dict = {'accelerator': 'cpu'}
+
+    # The tensorboard logger allows for monitoring the progress of training.
+    logger = TensorBoardLogger(save_dir=log_path)
+
+    # Define Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=log_path,
+        filename='checkpoint',
+        save_top_k=1,
+        verbose=True,
+        monitor='val/loss',
+        mode='min',
+    )
+
     # Early stopping interrupts training, if there was no improvement in validation
     # loss for a certain training period.
-    early_stopping_callback = EarlyStopping(monitor='valid_loss', patience=8)
-    if torch.cuda.is_available():
-        n_gpus = torch.cuda.device_count()
-    else:
-        n_gpus = 1
+    early_stopping_callback = EarlyStopping(monitor='val/loss', patience=5)
+
     # Instantiate trainer object.
     # The lightning trainer has a large number of parameters that can improve the
     # training experience. It is recommended to check out the lightning docs for
@@ -136,14 +151,14 @@ def main():
     # Lightning allows for simple multi-gpu training, gradient accumulation, half
     # precision training, etc. using the trainer class.
     trainer = pl.Trainer(
+        logger=logger,
         callbacks=[
             checkpoint_callback,
             early_stopping_callback,
             TQDMProgressBar(refresh_rate=30),
         ],
         max_epochs=5,
-        strategy='ddp_find_unused_parameters_false',
-        gpus=n_gpus,
+        **acc_dict
     )
     # Finally, kick of the training process.
     trainer.fit(
@@ -151,14 +166,16 @@ def main():
         train_dataloaders=train_dataloader,
         val_dataloaders=valid_dataloader,
     )
+
+    # Check how well we perform on the validation set.
     valid_metrics = trainer.validate(model, dataloaders=valid_dataloader, verbose=False)
-    print(valid_metrics)
+    print('Validation Metrics:', valid_metrics)
+
     # Evaluate how good our model works on the test data.
-    test_metrics = trainer.test(
+    trainer.test(
         model,
         dataloaders=test_dataloader,
     )
-    print(test_metrics)
 
 
 if __name__ == '__main__':

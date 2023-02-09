@@ -1,10 +1,12 @@
 -e .
-pandas
 jupyter
 jupytext
 matplotlib
+pandas
 pytorch_lightning
 scikit-learn
+segmentation-models-pytorch
+tensorboard
 torch
 torchvision
 transformers
