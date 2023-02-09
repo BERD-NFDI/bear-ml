@@ -13,20 +13,28 @@ from tqdm import tqdm
 class StringPreprocessor:
     """Preprocessing module."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """Initialize the StringPreprocessor."""
         super().__init__()
-        self.speller = Speller()
+
         # Choose the preprocessing functions that should be applied
-        self.preprocess_funcs = (
-            StringPreprocessor.remove_website_links,
-            StringPreprocessor.remove_newline,
-            StringPreprocessor.remove_punctuation,
-            StringPreprocessor.correct_spelling,
-            StringPreprocessor.remove_digits,
-            StringPreprocessor.remove_stop_words,
-            StringPreprocessor.convert_to_lowercase,
-        )
+        funcs = []
+        if kwargs.get('remove_website_links', True):
+            funcs.append(StringPreprocessor.remove_website_links)
+        if kwargs.get('remove_newline', True):
+            funcs.append(StringPreprocessor.remove_newline)
+        if kwargs.get('remove_punctuation', True):
+            funcs.append(StringPreprocessor.remove_punctuation)
+        if kwargs.get('correct_spelling', True):
+            funcs.append(StringPreprocessor.correct_spelling)
+        if kwargs.get('remove_digits', True):
+            funcs.append(StringPreprocessor.remove_digits)
+        if kwargs.get('remove_stop_words', True):
+            funcs.append(StringPreprocessor.remove_stop_words)
+        if kwargs.get('convert_to_lowercase', True):
+            funcs.append(StringPreprocessor.convert_to_lowercase)
+
+        self.preprocess_funcs = tuple(funcs)
 
     def _exec_preprocess_funcs(self, s: str) -> str:
         """Execute all preprocessing functions in a chain."""

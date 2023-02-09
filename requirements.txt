@@ -1,7 +1,12 @@
 -e .
+autocorrect
+bertopic
+gensim
 jupyter
 jupytext
 matplotlib
-pytorch_lightning
-torch
-torchvision
+pandas
+pytorch_lightning==1.9.0
+torch==1.13.1
+torchvision==0.14.1
+transformers==4.26.0

@@ -56,10 +56,11 @@ def main():
     docs = df['OCR_GoogleVision_original'].tolist()
 
     # Limit number of samples to save compute in this example.
-    docs = docs[:1000]
+    docs = docs[:10000]
 
     # Initialize preprocessing class
-    preprocessor = StringPreprocessor()
+    # Spell correction is off for computational efficiency
+    preprocessor = StringPreprocessor(correct_spelling=False)
 
     # Execute preprocessing steps
     docs = preprocessor.preprocess(docs)

@@ -1,6 +1,0 @@
-autocorrect==2.6.1
-bertopic==0.13.0
-gensim==4.3.0
-pandas==1.4.3
-torch==1.12.1+cu116
-transformers==4.21.1
