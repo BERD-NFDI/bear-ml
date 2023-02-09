@@ -1,10 +1,13 @@
 -e .
-pandas
+autocorrect
+bertopic
+gensim
 jupyter
 jupytext
 matplotlib
-pytorch_lightning
+pandas
+pytorch_lightning==1.9.0
 scikit-learn
-torch
-torchvision
-transformers
+torch==1.13.1
+torchvision==0.14.1
+transformers==4.26.0
