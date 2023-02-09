@@ -39,7 +39,7 @@ class CIFAR10DataModule(pl.LightningDataModule):
 
         :param data_dir: Directory where CIFAR10 will be saved.
         :param batch_size: Batch size.
-        :param num_workers: Number of workers for dataloader-
+        :param num_workers: Number of workers for dataloader.
         :param transform: Augmentations for training.
         :param seed: Random seed.
         """
