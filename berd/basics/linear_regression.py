@@ -21,6 +21,14 @@
 # In this notebook we give a small introduction about a few functionalities and
 # flexibility of pytorch as computation engine and as autograd framework.
 # The basis for our experiments is a simple linear regression with synthetic data.
+#
+# ## Learning goals
+#
+# - Learn the basics of linear regression
+# - Learn about the linear regression closed form solution
+# - Learn about alternatives for fitting a linear regression on batches
+# - Applying PyTorch in multiple ways to set up linear regression
+# - Traverse from linear regression to an arbitrary neural network
 
 # %%
 from typing import Any, Tuple
@@ -97,6 +105,7 @@ plt.close()
 # A major advantage is the possibility to perform calculations on the
 # GPU without much overhead.
 
+
 # %%
 def estimate_beta(x: Tensor, y: Tensor) -> Tensor:
     """Get beta coefficient over closed form solution."""
@@ -128,6 +137,7 @@ print(
 
 # %% [markdown]
 # We check how well the parameters approximate the linear function in a plot:
+
 
 # %%
 def plot_linear_regression(
