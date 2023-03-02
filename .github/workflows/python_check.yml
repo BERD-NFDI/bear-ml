@@ -30,7 +30,7 @@ jobs:
     - name: Run MyPy
       if: ${{ always() }}
       run: |
-        mypy --ignore-missing-imports --scripts-are-modules --exclude='*_nb\.py' skip berd
+        mypy --ignore-missing-imports --scripts-are-modules --follow-imports=skip --exclude=_nb\.py berd     
     - name: Run Pydocstyle
       if: ${{ always() }}
       run: |
