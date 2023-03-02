@@ -20,6 +20,7 @@ repos:
     -   id: mypy
         args:
           - --ignore-missing-imports
+        exclude: '_nb\.py'
 
 -   repo: https://github.com/PyCQA/isort
     rev: 5.12.0
@@ -48,6 +49,7 @@ repos:
         args:
           - --max-line-length=88
           - --extend-ignore=E203
+          - --exclude='*_nb\.py'
 
 -   repo: https://github.com/PyCQA/pydocstyle
     rev: 6.3.0
@@ -55,3 +57,4 @@ repos:
     -   id: pydocstyle
         args:
           - --ignore-decorators=property
+          - --match='((?!_nb).)*\.py'
