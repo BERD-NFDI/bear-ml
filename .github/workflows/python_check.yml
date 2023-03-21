@@ -26,12 +26,12 @@ jobs:
 
     - name: Run Flake8
       run: |
-        flake8 --max-line-length=88 --extend-ignore=E203 berd
+        flake8 --max-line-length=88 --extend-ignore=E203 --exclude="*_nb.py" berd
     - name: Run MyPy
       if: ${{ always() }}
       run: |
-        mypy --ignore-missing-imports --scripts-are-modules --follow-imports skip berd
+        mypy --ignore-missing-imports --scripts-are-modules --follow-imports=skip --exclude=_nb\.py berd
     - name: Run Pydocstyle
       if: ${{ always() }}
       run: |
-        pydocstyle --ignore-decorators=property berd
+        pydocstyle --ignore-decorators=property --match='((?!_nb).)*\.py' berd
