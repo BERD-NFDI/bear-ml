@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -18,8 +18,14 @@
 # This tutorial aims to provide a variety of insights on how to parametrize
 # experiments in python scripts.
 #
+# |                  |                                                                                                                                                                            |
+# |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+# | Requirements   	 | 	- Basic python skills                                                                                                                                                     |
+# | Learning Goals 	 | 	- Refactoring code for readability<br/>- Usage of basic type hinting<br/>- Defining data classes and constants<br/>- Using configuration files to set function parameters |
+# | Limitations    	 | 	- The tutorial features an additional advanced section, which require sound python skills.                                                                                |
+#
 
-# %% pycharm={"is_executing": true}
+# %%
 import math
 
 # %% [markdown]
@@ -27,7 +33,7 @@ import math
 # computing the result of a sine function.
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def compute_function(x):
     return 1.5 * math.sin(2 * math.pi / 0.6 * (x - 3)) + 0.2
 
@@ -42,7 +48,7 @@ def compute_function(x):
 # As a first step, we assign variables as our magic numbers.
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def compute_function(x):
     a = 1.5
     b = 0.6
@@ -57,7 +63,7 @@ def compute_function(x):
 # So let's try again:
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def compute_function(x):
     amplitude = 1.5
     period = 0.6
@@ -74,7 +80,7 @@ def compute_function(x):
 # An easy fix is to allow function parameters and set the above values as defaults.
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def compute_function(
     x,
     amplitude=1.5,
@@ -92,7 +98,7 @@ def compute_function(
 # and contribute a lot to readability, maintainability and error prevention.
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def compute_function(
     x: float,
     amplitude: float = 1.5,
@@ -109,7 +115,7 @@ def compute_function(
 # Imagine you use the function somewhere in a script e.g. like:
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def main() -> None:
     # <--- CODE ABOVE --->
     x_val = 0.75
@@ -129,7 +135,7 @@ def main() -> None:
 # but at least we can add a type hint indicating that we won't change
 # the value of our constant again.
 
-# %% pycharm={"is_executing": true}
+# %%
 from typing import Final
 
 SINUS_SHIFT: Final[float] = -2.5
@@ -157,7 +163,7 @@ def main() -> None:
 # Thus, we have some way to force constants and the class serves as a
 # good container for all parameters that may be subject to change.
 
-# %% pycharm={"is_executing": true}
+# %%
 from dataclasses import dataclass
 
 
@@ -176,7 +182,7 @@ class FunctionParameters:
 # We decide to pass our parameters as function argument to our main method:
 
 
-# %% pycharm={"is_executing": true}
+# %%
 def main(func_params: FunctionParameters) -> None:
     x_val = 0.75
     y = compute_function(
@@ -209,14 +215,14 @@ if __name__ == '__main__':
 # instance of `FunctionParameters`.
 # Second, the default arguments become our single source of truth.
 
-# %% pycharm={"is_executing": true}
+# %%
 # This simulates empty arguments.
 # Otherwise, calling below code snippet would fail in a jupyter notebook.
 import sys
 
 sys.argv = ['']
 
-# %% pycharm={"is_executing": true}
+# %%
 import argparse
 
 
@@ -302,7 +308,7 @@ if __name__ == '__main__':
 # }
 # ```
 
-# %% pycharm={"is_executing": true}
+# %%
 import json
 from typing import Dict
 
@@ -329,7 +335,7 @@ def load_json(f_path: str) -> Dict:
 #     center: 0.2
 # ```
 
-# %% pycharm={"is_executing": true}
+# %%
 import yaml
 
 
@@ -356,7 +362,7 @@ def load_yml(f_path: str) -> Dict:
 # center = 0.2
 # ```
 
-# %% pycharm={"is_executing": true}
+# %%
 import toml
 
 
@@ -385,10 +391,10 @@ def load_toml(f_path: str) -> Dict:
 # We stashed a matching config file in the repository beforehand, so we just need to emulate
 # CLI arguments.
 
-# %% pycharm={"is_executing": true}
+# %%
 sys.argv = ['', '--config', 'utils/configuration_tutorial.toml']
 
-# %% pycharm={"is_executing": true}
+# %%
 import argparse
 
 
@@ -444,7 +450,7 @@ if __name__ == '__main__':
 # First, the `dataclasses` utility has a function that lists the attributes or
 # `fields` in this context. We don't need to initialize the class for this.
 
-# %% pycharm={"is_executing": true}
+# %%
 import dataclasses
 
 cls_attributes = [field.name for field in dataclasses.fields(FunctionParameters)]
@@ -453,7 +459,7 @@ print(cls_attributes)
 # %% [markdown]
 # We load the config file to memory via the loading function defined above.
 
-# %% pycharm={"is_executing": true}
+# %%
 f_path = 'utils/configuration_tutorial.toml'
 cfg_dict = load_toml(f_path)
 
@@ -467,7 +473,7 @@ print(cfg_dict)
 # in turn would require a recursive parsing function.
 # In our example, we set a depth limit of one.
 
-# %% pycharm={"is_executing": true}
+# %%
 cfg_dict_new = {}
 for key, val in cfg_dict.items():
     if isinstance(val, dict):
@@ -483,7 +489,7 @@ print(cfg_dict_new)
 # We convert both objects into sets and compute difference. If all field names are contained,
 # the result should have a length of zero.
 
-# %% pycharm={"is_executing": true}
+# %%
 print(set(cls_attributes) - set(cfg_dict_new.keys()))
 
 print(set(cls_attributes + ['xyz']) - set(cfg_dict_new.keys()))
@@ -492,21 +498,21 @@ print(set(cls_attributes + ['xyz']) - set(cfg_dict_new.keys()))
 # To make sure that we only parse arguments, which can be processed by the constructor of the
 # dataclass, we take the intersection of sets afterwards.
 
-# %% pycharm={"is_executing": true}
+# %%
 final_keys = set(cls_attributes + ['xyz']).intersection(cfg_dict_new.keys())
 print(final_keys)
 
 # %% [markdown]
 # Eventually, the contents of the filtered config file can be passed to the dataclass via the `**` operator.
 
-# %% pycharm={"is_executing": true}
+# %%
 cfg_dict_filtered = {key: cfg_dict_new[key] for key in final_keys}
 FunctionParameters(**cfg_dict_filtered)
 
 # %% [markdown]
 # Let's combine everything in one handy object!
 
-# %% pycharm={"is_executing": true}
+# %%
 from dataclasses import is_dataclass
 
 import toml
@@ -556,14 +562,14 @@ class ConfigurationParser:
         return cfg_dict_new
 
 
-# %% pycharm={"is_executing": true}
+# %%
 f_path = 'utils/configuration_tutorial.toml'
 ConfigurationParser().get_configuration(f_path)
 
 # %% [markdown]
 # Given our `ConfigurationParser` and `FunctionParameters` classes, we can finalize the configuration setup of our script:
 
-# %% pycharm={"is_executing": true}
+# %%
 import argparse
 
 

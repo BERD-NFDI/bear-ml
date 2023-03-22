@@ -7,35 +7,30 @@
 
 # BERD Projects
 
+## 0. Introduction
 
-This repository contains example use-cases and sub-projects to showcase the
-functionality of deep learning training as well as related topics.
+Introducing "BERD Projects": the go-to repository for novice users looking to learn
+practical computing and data skills in the context of business and economics research.
 
-## 0. Contribution
+As more and more business and economics researchers rely on digital tools and methods,
+the need for accessible and effective training in these areas becomes increasingly
+pressing. BizEcon Carpentry seeks to fill this gap by providing a repository of training
+materials designed specifically for novice users who want to learn the fundamentals of
+data management, analysis, and visualization in the context of business and
+economics research.
 
-New ideas and improvements are always welcome. Feel free to open an issue or contribute
-over a pull request.
-Our repository has a few automatic checks in place that ensure a compliance with PEP8 and static
-typing.
-It is recommended to use `pre-commit` as a utility to adhere to the GitHub actions hooks
-beforehand.
-First, install the package over pip and then set a hook:
-```shell
-pip install pre-commit
-pre-commit install
-```
+Whether you are a graduate student, an early career researcher, or an experienced
+professional looking to update your skills, BERD Projects can help you improve your
+computing and data skills in a practical and effective way.
 
-To ensure code serialization and keeping the memory profile low, `.ipynb` are blacklisted
-in this repository.
-A notebook can be saved to the repo by converting it to a serializable format via
-`jupytext`, preferably `py:percent`:
+### Lessons
 
-```shell
-jupytext --to py:percent <notebook-to-convert>.ipynb
-```
+The repository contains introductory units for various topics.
 
-The result is a python file, which can be committed and later on be converted back to `.ipynb`.
-A notebook-python file from jupytext shall carry the suffix `_nb.py`.
+Currently available:
+
+- [Parametrizing python scripts with config files](berd/basics/configuration_tutorial_nb.ipynb)
+- [Linear regression with PyTorch](berd/basics/linear_regression_nb.ipynb)
 
 ## 1. Usage
 
@@ -83,3 +78,29 @@ jupytext --to ipynb --execute <your_file>_nb.py
 
 The `--execute` flag triggers executing every cell during conversion.
 Alternatively, you can run the `_nb.py` files like every other python script.
+
+## Contribution
+
+New ideas and improvements are always welcome. Feel free to open an issue or contribute
+over a pull request.
+Our repository has a few automatic checks in place that ensure a compliance with PEP8 and static
+typing.
+It is recommended to use `pre-commit` as a utility to adhere to the GitHub actions hooks
+beforehand.
+First, install the package over pip and then set a hook:
+```shell
+pip install pre-commit
+pre-commit install
+```
+
+To ensure code serialization and keeping the memory profile low, `.ipynb` are blacklisted
+in this repository.
+A notebook can be saved to the repo by converting it to a serializable format via
+`jupytext`, preferably `py:percent`:
+
+```shell
+jupytext --to py:percent <notebook-to-convert>.ipynb
+```
+
+The result is a python file, which can be committed and later on be converted back to `.ipynb`.
+A notebook-python file from jupytext shall carry the suffix `_nb.py`.
