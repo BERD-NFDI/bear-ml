@@ -22,13 +22,11 @@
 # flexibility of pytorch as computation engine and as autograd framework.
 # The basis for our experiments is a simple linear regression with synthetic data.
 #
-# ## Learning goals
-#
-# - Learn the basics of linear regression
-# - Learn about the linear regression closed form solution
-# - Learn about alternatives for fitting a linear regression on batches
-# - Applying PyTorch in multiple ways to set up linear regression
-# - Traverse from linear regression to an arbitrary neural network
+# |                  |                                                                                                                                                                        |
+# |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+# | Requirements   	 | 	- Basic python skills <br/>- Basic understanding of linear modelling                                                                                                  |
+# | Learning Goals 	 | 	- Solving the linear regression closed form with pytorch <br/>- Fitting a linear regression using autograd <br/>- Transform a linear regression into a neural network |
+# | Limitations    	 | 	- Some concepts like custom autograd functions are presented for showcase but not explained in detail                                                                 |
 
 # %%
 from typing import Any, Tuple
