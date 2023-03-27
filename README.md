@@ -14,7 +14,7 @@ practical computing and data skills in the context of business and economics res
 
 As more and more business and economics researchers rely on digital tools and methods,
 the need for accessible and effective training in these areas becomes increasingly
-pressing. BizEcon Carpentry seeks to fill this gap by providing a repository of training
+pressing. "BERD Projects" seeks to fill this gap by providing a repository of training
 materials designed specifically for novice users who want to learn the fundamentals of
 data management, analysis, and visualization in the context of business and
 economics research.
