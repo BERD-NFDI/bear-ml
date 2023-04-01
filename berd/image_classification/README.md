@@ -5,11 +5,11 @@ This repository is for the BERD project. It contains the example codes for Image
 
 
 ## Table of contents
-* [Image Classification](#Image Classification)
-* [Deep learning](#Deep learning)
+* [Image Classification](#Image-Classification)
+* [Deep learning](#Deep-learning)
 * [Optimization](#Optimization)
 * [Scheduler](#Scheduler)
-* [PyTorch Lightning](#PyTorch Lightning)
+* [PyTorch Lightning](#PyTorch-Lightning)
 * [Dataset](#Dataset)
 * [Usage/Examples](#Usage/Examples)
 * [Acknowledgements](#Acknowledgements)
