@@ -7,6 +7,7 @@ This repository is for the BERD project. It contains the example codes for Image
 ## Table of contents
 * [Image Classification](#Image-Classification)
 * [Deep learning](#Deep-learning)
+* [Model](#Model)
 * [Optimization](#Optimization)
 * [Scheduler](#Scheduler)
 * [PyTorch Lightning](#PyTorch-Lightning)
@@ -31,6 +32,39 @@ applications, including object recognition, face recognition, and medical imagin
 Deep learning is a subset of machine learning that uses artificial neural networks to model and solve complex problems.
 Deep learning models are designed to automatically learn hierarchical representations of data by processing it through
 a series of non-linear transformations.
+
+## Model
+
+### Encoder
+
+An encoder is a type of neural network that is used to extract important features from raw input data such as images,
+videos or other visual data. The main purpose of an encoder is to convert the input data into a compressed representation
+that captures the most important aspects of the input data.
+
+An encoder typically consists of a series of convolutional layers, which apply filters to the input data to identify
+patterns and features at different levels of abstraction. The output of each convolutional layer is then passed through
+a non-linear activation function to introduce non-linearity into the model.
+
+The final output of the encoder is a compressed representation of the input data, which can then be used as input to
+a decoder network that reconstructs the original input data. Alternatively, the compressed representation can be used as
+input to other downstream tasks such as classification, object detection or image segmentation.
+
+### Resnet34
+
+The ResNet34 architecture consists of 34 layers, including 33 convolutional layers and 1 fully connected layer. The first
+layer of the network is a convolutional layer with 64 filters and a kernel size of 7x7, followed by a max-pooling layer
+with a stride of 2. The following layers are arranged into a series of residual blocks, each containing multiple convolutional
+layers with skip connections.
+
+The skip connections in ResNet34 allow for easier training of deep networks by mitigating the vanishing gradient problem.
+Specifically, the skip connections allow the gradient to flow through the network more easily, making it easier for the
+model to learn from the data.
+
+At the end of the residual blocks, the output is passed through a global average pooling layer, which averages the
+spatial dimensions of the feature maps to produce a fixed-length feature vector. This feature vector is then passed
+through a fully connected layer with a softmax activation function, which produces a probability distribution over
+the different classes in the classification task.
+
 
 ## Optimization
 
