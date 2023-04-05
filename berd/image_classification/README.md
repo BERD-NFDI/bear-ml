@@ -136,6 +136,52 @@ python berd/image_classification/main.py
 There a few command line options available, which can be displayed by adding the
 `--help` flag to the above command.
 
+### Data module
+
+the data module is a module that is used to organize and prepare data for a machine learning model. It is responsible
+for loading, preprocessing, and transforming the data in a format that can be used by the model.
+
+The data module in PyTorch Lightning provides a standardized interface for data loading and processing. It includes
+a DataModule class that defines the data loading and processing pipeline, as well as methods for splitting the data
+into training, validation, and test sets.
+
+#### Prepare_data
+
+This function serves for initial data preparation only. No assignments should be made here. In our case, we will just
+download the data. In a multi GPU setting this is called with one single CPU process only.
+
+#### Setup
+
+This function is called by every process in a multi GPU setting and is dependent on the `stage` in which the lightning
+trainer is currently in. Assignments should be made here. The function serves well e.g. for train/test/val splits or
+initializing datasets.
+
+#### Train/val/test dataloader
+
+These functions return train/val/test dataloader.
+
+### Model module
+
+The LightningModule class in PyTorch Lightning provides a standardized interface for defining machine learning models.
+It includes methods for defining the model's forward pass, loss function, and optimization algorithm. It also provides
+hooks for various stages of the training process, such as the training and validation steps, as well as methods for
+saving and loading models.
+
+#### Forward
+
+In this function the forward pass of the model is defined.
+
+#### Training/validation/test_step
+
+In these functions, training/validation/test step are defined.
+
+#### Configure_optimizers
+
+In this function, the optimizer is specified furthermore you can specify a learning-rate scheduler as well.
+
+### Main
+
+In this file, different configurations are specified, and the trainer and the run are defined to run the model.
 
 ## Acknowledgements
 
