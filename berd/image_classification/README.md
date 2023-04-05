@@ -189,8 +189,3 @@ In this file, different configurations are specified, and the trainer and the ru
  - [CIFAR10](https://www.cs.toronto.edu/~kriz/cifar.html)
  - [Optimization](https://pytorch.org/docs/stable/optim.html)
  - [Scheduler](https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate)
-
-
-## Feedback
-
-If you have any feedback, please reach out to us at ... .

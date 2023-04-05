@@ -168,8 +168,3 @@ enough to only train the `head` or the `head` plus `decoder`.
  - [The Oxford-IIIT Pet](https://www.robots.ox.ac.uk/~vgg/data/pets/)
  - [Optimization](https://pytorch.org/docs/stable/optim.html)
  - [Scheduler](https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate)
-
-
-## Feedback
-
-If you have any feedback, please reach out to us at ... .
