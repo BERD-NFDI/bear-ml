@@ -5,9 +5,7 @@
 <img src=assets/berd_logo.png  alt="berd logo"/>
 </p>
 
-# BERD Projects
-
-## 0. Introduction
+# 0. Introduction & Scope
 
 Introducing "BERD Projects": the go-to repository for novice users looking to learn
 practical computing and data skills in the context of business and economics research.
@@ -23,7 +21,14 @@ Whether you are a graduate student, an early career researcher, or an experience
 professional looking to update your skills, BERD Projects can help you improve your
 computing and data skills in a practical and effective way.
 
-### Lessons
+## Target group
+
+Applied researchers from Business, Economics, Social Sciences or related field, who
+- .. have little or no formal eduction or experience with the analysis pipeline for unstructured data
+- .. want to know how to appropriately structure the codebase for the data analysis project
+- .. seek advice for specific problems faced when analyzing unstructured data and training models (see our [Discussion board](./discussions))
+
+## Practical Lessons
 
 The repository contains introductory units for various topics.
 
@@ -32,7 +37,20 @@ Currently available:
 - [Parametrizing python scripts with config files](berd/basics/configuration_tutorial_nb.ipynb)
 - [Linear regression with PyTorch](berd/basics/linear_regression_nb.ipynb)
 
-## 1. Usage
+If you feel that some important lesson is missing, please dom't hesitate to contact us and we will happily try to add it.
+
+## Educational resources
+
+We maintain a carefully curated list of educational resources intended to help researchers read up on specific topics.
+This list includes, but is not limited to, (a) courses, (b) books, (c) blog posts, (d) great overview papers, and (e) talks/presentations.  
+It is available under [this link](https://docs.google.com/document/d/1EH3Yq8Oi5wRq96t8IRjyMSKqj2WmihMclZiTZr7BmhA/edit?usp=sharing)
+
+## Discussion board
+
+Thie repository is accompanied by a discussion board intended for active communication with and among the community.
+Please feel free to ask you questions there, share valuable 
+
+# 1. Usage
 
 First, clone the repo and change to the project directory.
 
@@ -79,7 +97,7 @@ jupytext --to ipynb --execute <your_file>_nb.py
 The `--execute` flag triggers executing every cell during conversion.
 Alternatively, you can run the `_nb.py` files like every other python script.
 
-## Contribution
+# Contributing
 
 New ideas and improvements are always welcome. Feel free to open an issue or contribute
 over a pull request.
