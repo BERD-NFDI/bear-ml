@@ -18,15 +18,15 @@ data management, analysis, and visualization in the context of business and
 economics research.
 
 Whether you are a graduate student, an early career researcher, or an experienced
-professional looking to update your skills, BERD Projects can help you improve your
+professional looking to update your skills, "BERD Projects" can help you improve your
 computing and data skills in a practical and effective way.
 
-## Target group
+## Target Group
 
 Applied researchers from Business, Economics, Social Sciences or related field, who
-- .. have little or no formal eduction or experience with the analysis pipeline for unstructured data
-- .. want to know how to appropriately structure the codebase for the data analysis project
-- .. seek advice for specific problems faced when analyzing unstructured data and training models (see our [Discussion board](./discussions))
+- .. have little or no formal eduction or experience with analysis pipelines for unstructured data.
+- .. want to know how to appropriately structure the codebase for their data analysis project.
+- .. seek advice for specific problems faced when analyzing unstructured data and training models (see our [Discussion board](./discussions)).
 
 ## Practical Lessons
 
@@ -37,18 +37,18 @@ Currently available:
 - [Parametrizing python scripts with config files](berd/basics/configuration_tutorial_nb.ipynb)
 - [Linear regression with PyTorch](berd/basics/linear_regression_nb.ipynb)
 
-If you feel that some important lesson is missing, please dom't hesitate to contact us and we will happily try to add it.
+If you feel that some important lesson is missing, please don't hesitate to contact us and we will happily try to add it.
 
-## Educational resources
+## Educational Resources
 
 We maintain a carefully curated list of educational resources intended to help researchers read up on specific topics.
 This list includes, but is not limited to, (a) courses, (b) books, (c) blog posts, (d) great overview papers, and (e) talks/presentations.  
 It is available under [this link](https://docs.google.com/document/d/1EH3Yq8Oi5wRq96t8IRjyMSKqj2WmihMclZiTZr7BmhA/edit?usp=sharing)
 
-## Discussion board
+## Discussion Board
 
 Thie repository is accompanied by a discussion board intended for active communication with and among the community.
-Please feel free to ask you questions there, share valuable 
+Please feel free to ask your questions there, share valuable insights and give us feedback on our material. 
 
 # 1. Usage
 
