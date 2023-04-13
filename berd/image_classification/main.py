@@ -24,7 +24,7 @@ def get_args():
         '--epochs', type=int, default=20, help='number of training epochs'
     )
     parser.add_argument(
-        '--model_id', type=str, default='resnet18', help='model id for torch hub'
+        '--model_id', type=str, default='resnet34', help='model id for torch hub'
     )
     parser.add_argument(
         '--data_dir', type=str, default='data', help='path to data directory'
