@@ -51,8 +51,15 @@ It is available under [this link](https://docs.google.com/document/d/1EH3Yq8Oi5w
 
 ### Discussion Board
 
-Thie repository is accompanied by a discussion board intended for active communication with and among the community.
+This repository is accompanied by a discussion board intended for active communication with and among the community.
 Please feel free to ask your questions there, share valuable insights and give us feedback on our material.
+
+### Disclaimer
+
+Please note that the contents of this repository are still in the experimental early
+stages and may be subject to significant changes, bugs, and limitations.
+We are continuously working on improving the **BEARM-ML** repository and welcome any
+feedback or contributions. Thank you for your understanding.
 
 ## 1. Usage
 
