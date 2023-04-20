@@ -6,7 +6,7 @@ import zipfile
 import pandas as pd
 from bertopic import BERTopic
 
-from berd.topic_modeling.preprocessing import StringPreprocessor
+from bearml.topic_modeling.preprocessing import StringPreprocessor
 
 
 def download_dataset(f_dir: str = 'data') -> None:

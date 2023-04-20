@@ -10,8 +10,9 @@ In this example, we showcase how to use preprocessing and use the results for a 
 
 You can find the preprocessing class in `berd/topic_modeling/preprocessing.py`.
 To use this class:
+
 ```python
-from berd.topic_modeling.preprocessing import StringPreprocessor
+from bearml.topic_modeling.preprocessing import StringPreprocessor
 
 docs = ['My dataset', 'with a list of strings']
 
@@ -43,7 +44,7 @@ docs = preprocessor.preprocess(docs)
 Call the main script to get embeddings for your documents:
 
 ```shell
-python berd/topic_modeling/main.py
+python bearml/topic_modeling/main.py
 ```
 
 ## Acknowledgements

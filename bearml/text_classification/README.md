@@ -12,7 +12,7 @@ We rely on pretrained BERT as a language model that provides text embeddings for
 Call the main script to start training:
 
 ```shell
-python berd/text_classification/main.py
+python bearml/text_classification/main.py
 ```
 
 There are a few command line options available, which can be displayed by adding the

@@ -12,7 +12,7 @@ used, and we utilize the `torch.hub` to download model definitions.
 Call the main script to start training:
 
 ```shell
-python berd/image_classification/main.py
+python bearml/image_classification/main.py
 ```
 
 There a few command line options available, which can be displayed by adding the

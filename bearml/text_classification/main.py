@@ -19,8 +19,8 @@ from pytorch_lightning.callbacks import (
 from pytorch_lightning.loggers import TensorBoardLogger
 from transformers import BertTokenizerFast as BertTokenizer
 
-from berd.text_classification.data import ToxicCommentDataModule
-from berd.text_classification.model import ToxicCommentTagger
+from bearml.text_classification.data import ToxicCommentDataModule
+from bearml.text_classification.model import ToxicCommentTagger
 
 RANDOM_SEED = 42
 
