@@ -1,5 +1,5 @@
-[![BERD License](https://img.shields.io/badge/license-BERD-yellowgreen)](https://www.berd-nfdi.de/)
-![python](https://img.shields.io/badge/Python-3.10-brightgreen)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+ ![python](https://img.shields.io/badge/Python-3.10-brightgreen)
 
 <p align="center">
 <img src=assets/berd_logo.png  alt="berd logo"/>
