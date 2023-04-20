@@ -133,3 +133,19 @@ jupytext --to py:percent <notebook-to-convert>.ipynb
 
 The result is a python file, which can be committed and later on be converted back to `.ipynb`.
 A notebook-python file from jupytext shall carry the suffix `_nb.py`.
+
+
+## Citation
+
+If you use our repository or code in your research, please cite us:
+
+```
+@misc{bearml,
+  author = {Tobias Weber and Amirhossein Vahidi and Maximilian Witte and Bernd Bischl and Matthias Aßenmacher},
+  title = {BEAR-ML: BERD's Educational Archive for Research on Machine Learning},
+  year = {2023},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/BERD-NFDI/bear-ml}},
+}
+```
