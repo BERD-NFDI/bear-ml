@@ -10,8 +10,8 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision.transforms import AutoAugment, AutoAugmentPolicy
 
-from berd.image_classification.data import CIFAR10DataModule
-from berd.image_classification.model import ClassifierModule
+from bearml.image_classification.data import CIFAR10DataModule
+from bearml.image_classification.model import ClassifierModule
 
 RANDOM_SEED = 42
 

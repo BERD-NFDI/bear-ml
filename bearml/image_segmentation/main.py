@@ -15,7 +15,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
 from torch.utils.data import DataLoader
 
-from berd.image_segmentation.model import SegmentationModel
+from bearml.image_segmentation.model import SegmentationModel
 
 RANDOM_SEED = 42
 

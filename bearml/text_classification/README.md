@@ -203,7 +203,7 @@ We rely on pretrained BERT as a language model that provides text embeddings for
 Call the main script to start training:
 
 ```shell
-python berd/text_classification/main.py
+python bearml/text_classification/main.py
 ```
 
 This way, all default parameters are applied. If you e.g. want to train for more epochs

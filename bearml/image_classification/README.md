@@ -228,7 +228,7 @@ In our case, we include following options:
 The script itself can be executed via:
 
 ```shell
-python berd/image_classification/main.py
+python bearml/image_classification/main.py
 ```
 
 This way, all default parameters are applied. If you e.g. want to train for more epochs
