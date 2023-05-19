@@ -13,7 +13,7 @@
 # ---
 
 # %% [markdown]
-# # Tutorial for Splitting Datasets
+# # Tutorial for Splitting Datasets - Part 1
 #
 # In this tutorial we investigate the concept of splitting data in multiple
 # partitions using pandas dataframes. The presented concepts are intensified
