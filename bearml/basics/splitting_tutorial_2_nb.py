@@ -20,16 +20,16 @@
 # to focus on the `Dataset` structure, which is provided by PyTorch as a
 # measure for providing data to the neural network training procedure.
 #
-# |                  |                                                                                                                                                                                                                                                                  |
-# |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-# | Requirements   	 | 	- Basic python skills                                                                                                                                                                                                                                           |
-# | Learning Goals 	 | 	- Understanding basics of a pandas dataframe <br/>- Concept of splitting data into multiple partitions <br/>- Various splitting strategies for dataframes. <br/>- Understanding cross-validation <br/>- Application of cross-validation in a practical use-case |
-# | Limitations    	 | - The tutorial only handles pandas dataframes and a numpy array in the practical use-case.                                                                                                                                                                       |
+# |                  |                                                                                                                                                                                                      |
+# |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+# | Requirements   	 | 	- Basic python skills                                                                                                                                                                               |
+# | Learning Goals 	 | 	- Understanding basics of a PyTorch Dataset <br/>- Concept of splitting data into multiple partitions using PyTorch <br/>- Ensure reproducibility of splits. <br/>- Creating datasets based on keys |
+# | Limitations    	 | - The tutorial does not go into depth on how to load data into memory.                                                                                                                               |
 #
 
 import uuid
 
-# %% is_executing=true
+# %%
 from typing import Any, List
 
 import torch
