@@ -5,6 +5,7 @@ gensim
 jupyter
 jupytext
 matplotlib
+opencv-python
 pandas
 pytorch_lightning==2.0.1
 pyyaml
