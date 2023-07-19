@@ -40,6 +40,10 @@ Currently available:
 
 - [Parametrizing python scripts with config files](bearml/basics/configuration_tutorial_nb.ipynb)
 - [Linear regression with PyTorch](bearml/basics/linear_regression_nb.ipynb)
+- [Configuration files and Dataclasses](bearml/basics/configuration_tutorial_nb.ipynb)
+- [Splitting datasets part I](bearml/basics/splitting_tutorial_1_nb.ipynb)
+- [Splitting datasets Part II](bearml/basics/splitting_tutorial_2_nb.ipynb)
+- [Image segmentation with classic computer vision](bearml/basics/classic_segmentation_tutorial_nb.ipynb)
 
 If you feel that some important lesson is missing, please don't hesitate to contact us and we will happily try to add it.
 
